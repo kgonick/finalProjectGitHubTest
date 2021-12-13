@@ -1,4 +1,3 @@
-// Basic demo for accelerometer readings from Adafruit ICM20948
 
 #include <Adafruit_ICM20X.h>
 #include <Adafruit_ICM20948.h>
@@ -7,28 +6,27 @@
 #include <Adafruit_NeoPixel.h>
 
 Adafruit_ICM20948 icm;
-uint16_t measurement_delay_us = 65535; // Delay between measurements for testing
+uint16_t measurement_delay_us = 65535; 
 
 Adafruit_NeoPixel neopixel = Adafruit_NeoPixel(30, 32, NEO_RGB);
 
 int mapXPin = 0;
 int mapYPin = 0;
 int mapZPin = 0;
-int powerSwitch = 33;
+int powerButton = 33;
 
 void setup(void) {
-  pinMode(powerSwitch, INPUT);
+  pinMode(powerButton, INPUT);
 
   neopixel.begin();
   neopixel.clear();
   neopixel.show();
   Serial.begin(115200);
   while (!Serial)
-    delay(10); // will pause Zero, Leonardo, etc until serial console opens
+    delay(10); 
 
   Serial.println("Adafruit ICM20948 test!");
 
-  // Try to initialize!
   if (!icm.begin_I2C()) {
     Serial.println("Failed to find ICM20948 chip");
     while (1) {
@@ -65,17 +63,13 @@ void setup(void) {
 }
 
 void loop() {
-  if (digitalRead(powerSwitch) == HIGH){
+  if (digitalRead(powerButton) == HIGH){
     runProgram();
   } else {
     turnOff();
   }
 
-//  runProgram();
 }
-
-
-
 
 void runProgram() {
   sensors_event_t accel;
@@ -84,7 +78,6 @@ void runProgram() {
   sensors_event_t temp;
   icm.getEvent(&accel, &gyro, &temp, &mag);
 
-  /* Display the results (acceleration is measured in m/s^2) */
   //  Serial.print("\t\tAccel X: ");
   //  Serial.print((int)(accel.acceleration.x * 100));
   //  Serial.print(" \tY: ");
@@ -105,12 +98,13 @@ void runProgram() {
   Serial.println( );
   Serial.println(mapZPin);
   for (int i = 0; i < 30; i++) {
-    neopixel.setPixelColor(i, 0, mapXPin, mapYPin);
+    neopixel.setPixelColor(i, mapXPin, mapZPin, mapYPin);
   }
   neopixel.show();
 
   delay(100);
 }
+
 
 
 
